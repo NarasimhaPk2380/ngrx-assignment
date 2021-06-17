@@ -1,11 +1,19 @@
 import * as express from 'express';
 // import cors from "cors";
-// import path from "path";
+import * as path from 'path';
 import routes from '../api';
 import { CustomError } from '../utils';
 
 export default ({ app }: { app: express.Application }) => {
+  const CLIENT_BUILD_PATH = path.join(__dirname, '../../../bookscart');
+
   app.use(express.json({}));
+
+  app.use(express.static(CLIENT_BUILD_PATH));
+
+  app.get('*', (request, response) => {
+    response.sendFile(path.join(CLIENT_BUILD_PATH, 'index.html'));
+  });
 
   // Load API routes
   app.use('/api', routes());
